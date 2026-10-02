@@ -1,51 +1,51 @@
-import { useState, useEffect, useCallback } from 'react'
-import { fetchPosts, createPost } from './api'
-import MessageForm from './components/MessageForm'
-import PostList from './components/PostList'
-import './App.css'
+import { useState, useEffect, useCallback } from "react";
+import { fetchPosts, createPost } from "./api";
+import MessageForm from "./components/MessageForm";
+import PostList from "./components/PostList";
+import "./App.css";
 
-const DEPLOYER_NAME = import.meta.env.VITE_DEPLOYER_NAME
-const API_URL = import.meta.env.VITE_API_URL
+const DEPLOYER_NAME = import.meta.env.VITE_DEPLOYER_NAME;
+const API_URL = import.meta.env.VITE_API_URL;
 
 function App() {
-  const [posts, setPosts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [fetchError, setFetchError] = useState(null)
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   const loadPosts = useCallback(async () => {
     try {
-      const data = await fetchPosts()
-      setPosts(data)
-      setFetchError(null)
+      const data = await fetchPosts();
+      setPosts(data);
+      setFetchError(null);
     } catch {
-      setFetchError('게시글을 불러오지 못했어요.')
+      setFetchError("게시글을 불러오지 못했어요.");
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const init = async () => {
       if (DEPLOYER_NAME) {
-        createPost({ type: 'deploy', name: DEPLOYER_NAME }).catch(() => {})
+        createPost({ type: "deploy", name: DEPLOYER_NAME }).catch(() => {});
       }
-      await loadPosts()
-      setLoading(false)
-    }
-    init()
+      await loadPosts();
+      setLoading(false);
+    };
+    init();
 
-    const timer = setInterval(loadPosts, 10000)
-    return () => clearInterval(timer)
-  }, [loadPosts])
+    const timer = setInterval(loadPosts, 10000);
+    return () => clearInterval(timer);
+  }, [loadPosts]);
 
   const handleSubmit = async (name, message) => {
-    await createPost({ type: 'message', name, message })
-    await loadPosts()
-  }
+    await createPost({ type: "message", name, message });
+    await loadPosts();
+  };
 
   return (
     <div className="app">
       <header className="header">
         <h1 className="header-title">배포 인증 방명록</h1>
-        <p className="header-sub">배포에 성공하면 자동으로 이름이 올라가요</p>
+        <p className="header-sub">배포에 완료 시 자동으로 이름이 올라가요</p>
         {DEPLOYER_NAME && (
           <div className="header-deploy-badge">
             <span>🚀</span>
@@ -90,7 +90,7 @@ function App() {
         </section>
       </main>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
